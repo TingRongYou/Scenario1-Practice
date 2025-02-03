@@ -5,31 +5,24 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		//SHOPPING CART PROGRAM
+		//printf() = is a method used to format output
 		
-		Scanner scanner = new Scanner(System.in);
+		//%[flags][width][.precision][specifier-character]
 		
-		String item;
-		double price;
-		int quantity;
-		char currency = '$';
-		double total;
+		String name = "Spongebob";
+		char firstLetter = 'S';
+		int age = 30;
+		double height = 60.5;
+		boolean isEmployed = true;
 		
-		System.out.print("What item would you like to buy?: ");
-		item = scanner.nextLine();
+		System.out.printf("Hello %s\n", name);
+		System.out.printf("Your name starts with a %c\n", firstLetter);
+		System.out.printf("You are %d years old\n", age);
+		System.out.printf("You are %f inches tall\n", height);
+		System.out.printf("Employed: %b\n", isEmployed);
 		
-		System.out.print("What is the price for each?: ");
-		price = scanner.nextDouble();
-		
-		System.out.print("How many would you like?: ");
-		quantity = scanner.nextInt();
-		
-		total = price * quantity;
-		
-		System.out.println("\nYou have bought " + quantity + " " + item + "/s");
-		System.out.println("Your total is " + currency + total);
+		System.out.printf("%s is %d years old", name, age);
 
-		scanner.close();
 	}
 
 }
