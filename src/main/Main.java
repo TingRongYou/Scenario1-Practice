@@ -9,11 +9,8 @@ public class Main {
 		
 		Car car = new Car();
 		
-		System.out.println(car.make);
-		System.out.println(car.model);
-		System.out.println(car.year);
-		System.out.println(car.price);
-		System.out.println(car.isRunning);
+		car.drive();
+		car.brake();
 				
 	}
 	
