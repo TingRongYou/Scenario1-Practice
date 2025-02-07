@@ -5,20 +5,23 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		//ENHANCED SWITCH = A replacement to many else if statements(Java 14 feature)
-
-		Scanner scanner = new Scanner(System.in);
+		//VARARGS = allow a method to accept varying number of arguments
+		//No need for overloaded methods
+		//Java will pack arguments into an array
 		
-		System.out.print("Enter the day of the week: ");
-		String day = scanner.nextLine();
+		System.out.println(add(1, 2, 3, 4));
 		
-		switch(day) {
-			case "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" -> 
-				System.out.println("It is a weekday");
-			case "Saturday", "Sunday" -> 
-				System.out.println("It is the weekend");
-			default -> System.out.println(day + " is not a day");
+	}
+	
+	static int add(int... numbers) {
+		
+		int sum = 0;
+		
+		for(int number : numbers) {
+			sum += number;
 		}
+		
+		return sum;
 		
 	}
 
