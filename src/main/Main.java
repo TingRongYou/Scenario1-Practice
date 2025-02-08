@@ -1,21 +1,67 @@
 package main;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		//CONSTRUCTOR = A special method to initialize objects
-		//You can pass arguments to a constructor
-		//And set up initial values
+		//MUSIC PLAYER
 		
-		Student student1 = new Student("Spongebob", 30, 3.2);
-		Student student2 = new Student("Patrick", 34, 1.5);
-		Student student3 = new Student("Sandy", 27, 4.0);
+		String filePath = "src\\see-you-later-203103.wav";
+		File file = new File(filePath);
 		
-		student1.study();
-		student2.study();
-		student3.study();
+		
+		try(Scanner scanner = new Scanner(System.in);
+				AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
+			
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioStream);
+						
+			String response = "";
+			
+			while(!response.equals("Q")) {
+				System.out.println("P = Play");
+				System.out.println("S = Stop");
+				System.out.println("R = Reset");
+				System.out.println("Q = Quit");
+				System.out.print("Enter your choice: ");
+				
+				response = scanner.next().toUpperCase();
+				
+				switch(response) {
+				case "P" -> clip.start();
+				case "S" -> clip.stop();
+				case "R" -> clip.setMicrosecondPosition(0);
+				case "Q" -> clip.close();
+				default -> System.out.println("Invalid Choice!");
+				}
+				
+			}
+		}
+		catch(FileNotFoundException e) {
+			System.out.println("Could not locate file");
+		}
+		catch(LineUnavailableException e) {
+			System.out.println("Unable to access audio resource");
+		}
+		catch(UnsupportedAudioFileException e) {
+			System.out.println("Audio File is not supported");
+		}
+		catch(IOException e){
+			System.out.println("Something went wrong");
+		}
+		finally {
+			System.out.println("Bye!");
+		}
 				
 	}
 	
