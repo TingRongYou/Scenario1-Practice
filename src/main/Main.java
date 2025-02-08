@@ -1,68 +1,139 @@
 package main;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		//MUSIC PLAYER
+		//JAVA HANGMAN GAME
 		
-		String filePath = "src\\see-you-later-203103.wav";
-		File file = new File(filePath);
+		String filePath = "src\\words.txt";
+		ArrayList<String> words = new ArrayList<>();
 		
-		
-		try(Scanner scanner = new Scanner(System.in);
-				AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
-			
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioStream);
-						
-			String response = "";
-			
-			while(!response.equals("Q")) {
-				System.out.println("P = Play");
-				System.out.println("S = Stop");
-				System.out.println("R = Reset");
-				System.out.println("Q = Quit");
-				System.out.print("Enter your choice: ");
-				
-				response = scanner.next().toUpperCase();
-				
-				switch(response) {
-				case "P" -> clip.start();
-				case "S" -> clip.stop();
-				case "R" -> clip.setMicrosecondPosition(0);
-				case "Q" -> clip.close();
-				default -> System.out.println("Invalid Choice!");
-				}
-				
+		try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			while((line = reader.readLine()) != null) {
+				words.add(line.trim());
 			}
 		}
 		catch(FileNotFoundException e) {
-			System.out.println("Could not locate file");
+			System.out.println("Could not find file");
 		}
-		catch(LineUnavailableException e) {
-			System.out.println("Unable to access audio resource");
-		}
-		catch(UnsupportedAudioFileException e) {
-			System.out.println("Audio File is not supported");
-		}
-		catch(IOException e){
+		catch(IOException e) {
 			System.out.println("Something went wrong");
 		}
-		finally {
-			System.out.println("Bye!");
-		}
+		
+		Random random = new Random();
+		
+		String word = words.get(random.nextInt(words.size()));
 				
+		Scanner scanner = new Scanner(System.in);
+		ArrayList<Character> wordState = new ArrayList<>();
+		int wrongGuesses = 0;
+		
+		for(int i = 0; i < word.length(); i++) {
+			wordState.add('_');
+		}
+		
+		System.out.println("************************");
+		System.out.println("Welcome to Java Hangman!");
+		System.out.println("************************");
+		
+		while(wrongGuesses < 6) {
+			
+			System.out.println(getHangmanArt(wrongGuesses));
+			
+			System.out.print("Word: ");
+			
+			for(char c : wordState) {
+				System.out.print(c + " ");
+			}
+			
+			System.out.println();
+			
+			System.out.print("Guess a letter: ");
+			char guess = scanner.next().toLowerCase().charAt(0);
+			
+			if(word.indexOf(guess) >= 0) {
+				System.out.println("Correct guess!");
+				
+				for(int i = 0; i < word.length(); i++) {
+					if(word.charAt(i) == guess) {
+						wordState.set(i, guess);
+					}
+				}
+				
+				if(!wordState.contains('_')) {
+					System.out.println(getHangmanArt(wrongGuesses));
+					System.out.println("YOU WIN!");
+					System.out.println("The word was: " + word);
+					break;
+				}
+				
+			}
+			else {
+				wrongGuesses++;
+				System.out.println("Wrong guess!");
+			}
+		}
+		
+		if(wrongGuesses >= 6) {
+			System.out.println(getHangmanArt(wrongGuesses));
+			System.out.println("GAME OVER!");
+			System.out.println("The word was: " + word);
+		}
+		
+		scanner.close(); 
+				
+	}
+	
+	static String getHangmanArt(int wrongGuesses) {
+		
+		return switch(wrongGuesses) {
+		case 0 -> """
+				  
+				  
+				  
+				  """;
+		case 1 -> """
+				   o
+		  
+		  
+				  """;
+		case 2 -> """
+		           o
+		           |
+		  
+		          """;
+		case 3 -> """
+				   o
+				  /|
+
+				  """;
+		case 4 -> """
+				   o
+				  /|\\
+
+				  """;
+		case 5 -> """
+				   o
+				  /|\\
+				  /
+				  """;
+		case 6 -> """
+				   o
+				  /|\\
+				  / \\
+				  """;
+		default -> "";
+		};
 	}
 	
 }
